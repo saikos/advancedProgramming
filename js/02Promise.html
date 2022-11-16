@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Promise Example</title>
+        <script>
+            const users = fetch('https://jsonplaceholder.typicode.com/users')
+                .then(res => res.json())
+                .then(json => {
+                    console.log('Log [1]', json);                    
+                    return json;                    
+                });
+            console.log('Log [2]', users);                    
+            
+            async function getUsers() {
+                const res = await fetch('https://jsonplaceholder.typicode.com/users');
+                const json = await res.json();
+                console.log('Log [3]', json);
+                return json;                
+            }
+
+            const users2 = getUsers();
+            console.log('Log [4]', users2);
+
+            async function printUsers() {
+                const users3 = await getUsers();
+                console.log('Log [5]', users3);
+            }
+
+            printUsers();
+
+        </script>
+    </head>
+    <body>
+        Open dev tools and check the console.
+    </body>
+</html>
