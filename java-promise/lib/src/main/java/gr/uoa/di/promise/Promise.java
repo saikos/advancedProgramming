@@ -1,5 +1,6 @@
 package gr.uoa.di.promise;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -36,18 +37,18 @@ public class Promise<V> {
 
     public static enum Status {
         PENDING,
-        FULLFILLED,
+        FULFILLED,
         REJECTED
     }
 
     // No instance fields are defined, perhaps you should add some!
-    
+
     public Promise(PromiseExecutor<V> executor) {
         // Constructors that throw exceptions is a bad thing
         throw new UnsupportedOperationException("IMPLEMENT ME");        
     }
 
-    public <T> Promise<ValueOrError<T>> then(Function<V, T> onResolve, Consumer<Throwable> onReject) {
+    public <T> Promise<T> then(Function<V, T> onResolve, Consumer<Throwable> onReject) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
@@ -56,12 +57,12 @@ public class Promise<V> {
     }
 
     // catch is a reserved word in Java.
-    public Promise<Throwable> catchError(Consumer<Throwable> onReject) {
+    public Promise<?> catchError(Consumer<Throwable> onReject) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
     // finally is a reserved word in Java.
-    public <T> Promise<ValueOrError<T>> andFinally(Consumer<ValueOrError<T>> onSettle) {
+    public Promise<V> andFinally(Consumer<ValueOrError<V>> onSettle) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
@@ -69,24 +70,23 @@ public class Promise<V> {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
-    public static Promise<Throwable> reject(Throwable error) {
+    public static Promise<Void> reject(Throwable error) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
-    public static <T> Promise<T> race(Iterable<Promise<?>> promises) {
+    public static Promise<ValueOrError<?>> race(List<Promise<?>> promises) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
-    public static <T> Promise<T> any(Iterable<Promise<?>> promises) {
+    public static Promise<?> any(List<Promise<?>> promises) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
-    public static <T> Promise<T> all(Iterable<Promise<?>> promises) {
+    public static Promise<List<?>> all(List<Promise<?>> promises) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
 
-    public static <T> Promise<T> allSettled(Iterable<Promise<?>> promises) {
+    public static Promise<List<ValueOrError<?>>> allSettled(List<Promise<?>> promises) {
         throw new UnsupportedOperationException("IMPLEMENT ME");
     }
-
 }

@@ -1,9 +1,7 @@
 package gr.uoa.di.promise;
 
 public interface ValueOrError<V>  {
-    default boolean hasError() {
-        return error() == null;
-    }
+    boolean hasError();
     V value();
     Throwable error();
 
@@ -25,7 +23,20 @@ public interface ValueOrError<V>  {
             return null;
         }
 
+        @Override
+        public boolean hasError() {
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return "Value{" +
+                    "value=" + value +
+                    '}';
+        }
+
         static <T> ValueOrError<T> of(T t) { return new Value<>(t);}
+
     }
 
     static class Error<V> implements ValueOrError<V> {
@@ -46,36 +57,19 @@ public interface ValueOrError<V>  {
             return throwable;
         }
 
+        @Override
+        public boolean hasError() {
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "Error{" +
+                    "throwable=" + throwable +
+                    '}';
+        }
+
         static <T> ValueOrError<T> of(Throwable t) { return new Error<>(t);}
     }
 
-    static class Factory  {
-        public static <T> ValueOrError<T> ofValue(T t) {
-            return new ValueOrError<T>() {
-                @Override
-                public T value() {
-                    return t;
-                }
-
-                @Override
-                public Throwable error() {
-                    return null;
-                }
-            };
-        }
-
-        public static ValueOrError<Void> ofError(Throwable t) {
-            return new ValueOrError<Void>() {
-                @Override
-                public Void value() {
-                    return null;
-                }
-
-                @Override
-                public Throwable error() {
-                    return t;
-                }
-            };
-        }
-    }
 }
