@@ -238,7 +238,7 @@ class PromiseSpec extends Specification {
     def "16-Advanced scenario works correctly"() {
         given:
         BlockingVariable<List<?>> result = new BlockingVariable<>()
-        PromiseExecutor<String> delayedString = new DelayedValue<>("DONE", 1000)
+        PromiseExecutor<String> delayedString = new DelayedValue<>("DONE", 100)
 
         when:
         Promise<String> promise = new Promise<>(delayedString)
