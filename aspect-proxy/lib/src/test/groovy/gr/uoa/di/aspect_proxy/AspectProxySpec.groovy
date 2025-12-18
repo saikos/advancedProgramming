@@ -18,4 +18,26 @@ class AspectProxySpec extends Specification {
         then:
         noExceptionThrown()
     }
+
+    def "02-Simple example"() {
+        given:
+        Factory factory = new Factory()
+        int callCount = 0
+
+        when:
+        AspectWeaver weaver = factory.newAspectWeaver()
+        Aspect aspect = factory
+            .newAspectBuilder()
+            .withTargets(List.class)
+            .withBeforeAdviceFor( ()->callCount++, List.class.getMethods())
+            .withAfterAdviceFor( ()->callCount++, List.class.getMethods())
+            .build()
+        List<String> list = new ArrayList<>()
+        List<String> wovenList = weaver.weave(list) as List<String>
+        wovenList.size()
+        wovenList.add("FOO")
+
+        then:
+        callCount == 4
+    }
 }
