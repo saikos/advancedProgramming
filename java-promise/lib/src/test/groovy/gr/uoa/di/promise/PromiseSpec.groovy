@@ -251,4 +251,74 @@ class PromiseSpec extends Specification {
         then:
         result.get() == ["done", 4, "DONE"]
     }
+
+    def "17-Finally is transparent in the case of resolution"() {
+        given:
+        BlockingVariable<String> result = new BlockingVariable<>()
+
+        when:
+        Promise<String> promise = Promise
+            .resolve("DONE")
+            .andFinally( voe -> println(voe.value()))
+            .then( v -> result.set(v))
+
+        then:
+        result.get() == "done"
+    }
+
+    def "18-Finally is transparent in the case of rejection"() {
+        given:
+        BlockingVariable<String> result = new BlockingVariable<>()
+
+        when:
+        Promise<String> promise = Promise
+            .reject(new RuntimeException("NOT"))
+            .andFinally( voe -> println(voe.error()))
+            .catchError( e -> result.set(e.getMessage()))
+
+        then:
+        result.get() == "NOT"
+    }
+
+    def "19-Finally is not transparent when its callback throws an error"() {
+        given:
+        BlockingVariable<String> result = new BlockingVariable<>()
+
+        when:
+        Promise<String> promise = Promise
+            .reject(new RuntimeException("NOT"))
+            .andFinally( voe -> throw new RuntimeException("Oh, NOT again!"))
+            .catchError( e -> result.set(e.getMessage()))
+
+        then:
+        result.get() == "Oh, NOT again!"
+    }
+
+    def "20-A subscription can occur after a resolution"() {
+        given:
+        BlockingVariable<String> result = new BlockingVariable<>()
+
+        when:
+        Promise<String> promise = Promise
+            .resolve("DONE"))
+        Thread.sleep(1000)
+        promise.then( v -> result.set(v))
+
+        then:
+        result.get() == "DONE"
+    }
+
+    def "21-A rejected promise ignores thens"() {
+        given:
+        BlockingVariable<String> result = new BlockingVariable<>()
+
+        when:
+        Promise<String> promise = Promise
+            .reject(new RuntimeException("NOT"))
+            .then( v -> result.set(v))
+
+        then:
+        result.get() == null
+    }
+
 }
