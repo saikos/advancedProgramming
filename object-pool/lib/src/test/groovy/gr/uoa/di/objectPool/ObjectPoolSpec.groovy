@@ -2,6 +2,7 @@ package gr.uoa.di.objectPool
 
 import org.spockframework.runtime.SpockTimeoutError
 import spock.lang.Specification
+import spock.lang.Unroll
 import spock.util.concurrent.BlockingVariable
 
 class ObjectPoolSpec extends Specification {
@@ -11,21 +12,25 @@ class ObjectPoolSpec extends Specification {
         Helper.newBrokenConnectionPool()
 
         then:
-        thrown(RuntimeException.class)
+        RuntimeException e = thrown()
+        e.message != "Implement me"
     }
 
-    def "02 - Cannot create a new Connection Pool with invalid settings"() {
-        setup:
-        Helper.newConnectionPool(poolSize, queueSize)
+    @Unroll
+    def "02 - Cannot create a new Connection Pool with invalid settings (poolSize: #poolSize, queueSize: #queueSize, timeout:#timeout)"() {
+        when:
+        Helper.newConnectionPool(poolSize, queueSize, timeout)
 
-        expect:
-        thrown(RuntimeException.class)
+        then:
+        RuntimeException e = thrown()
+        e.message != "Implement me"
 
         where:
-        poolSize | queueSize
-        -1       | 0    //negative pool size
-        0        | 0    //zero pool size
-        1        | -1   //negative queue size
+        poolSize | queueSize | timeout
+        -1       | 0         | 1  //negative pool size
+        0        | 0         | 1  //zero pool size
+        1        | -1        | 1  //negative queue size
+        1        | 1         | -1 //negative timeout
 
     }
 

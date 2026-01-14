@@ -9,7 +9,7 @@ class Helper {
     static SimplePool<Connection> newBrokenConnectionPool() {
         ConnectionFactory factory = new ConnectionFactory()
         Method invalidMethod = String.class.getMethod("toString", null)
-        return SimplePool.newInstance(factory, List.of(invalidMethod), new Pool.Settings(1, 0))
+        return SimplePool.newInstance(factory, List.of(invalidMethod), new Pool.Settings(1, 0, 10))
     }
 
     static SimplePool<Connection> newConnectionPool(int poolSize, int queueSize, int timeout=DEFAULT_TIMEOUT) {
