@@ -7,6 +7,6 @@ class ConnectionFactory implements Factory<Connection> {
     @Override
     synchronized Connection create() {
         counter++;
-        return new Connection(counter);
+        return new ConnectionImpl(counter);
     }
 }

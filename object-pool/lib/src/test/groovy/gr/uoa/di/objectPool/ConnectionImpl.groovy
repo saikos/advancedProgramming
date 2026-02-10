@@ -1,10 +1,10 @@
 package gr.uoa.di.objectPool
 
-class Connection {
+class ConnectionImpl implements Connection {
 
     private final int id;
 
-    Connection(int id) {
+    ConnectionImpl(int id) {
         this.id = id;
     }
 
