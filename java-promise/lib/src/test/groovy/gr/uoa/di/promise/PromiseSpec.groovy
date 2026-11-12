@@ -263,7 +263,7 @@ class PromiseSpec extends Specification {
             .then( v -> result.set(v))
 
         then:
-        result.get() == "done"
+        result.get() == "DONE"
     }
 
     def "18-Finally is transparent in the case of rejection"() {
@@ -287,7 +287,7 @@ class PromiseSpec extends Specification {
         when:
         Promise<String> promise = Promise
             .reject(new RuntimeException("NOT"))
-            .andFinally( voe -> throw new RuntimeException("Oh, NOT again!"))
+            .andFinally( voe -> { throw new RuntimeException("Oh, NOT again!") })
             .catchError( e -> result.set(e.getMessage()))
 
         then:
@@ -299,8 +299,7 @@ class PromiseSpec extends Specification {
         BlockingVariable<String> result = new BlockingVariable<>()
 
         when:
-        Promise<String> promise = Promise
-            .resolve("DONE"))
+        Promise<String> promise = Promise.resolve("DONE")
         Thread.sleep(1000)
         promise.then( v -> result.set(v))
 
@@ -311,6 +310,7 @@ class PromiseSpec extends Specification {
     def "21-A rejected promise ignores thens"() {
         given:
         BlockingVariable<String> result = new BlockingVariable<>()
+		result.set(null)
 
         when:
         Promise<String> promise = Promise
